@@ -54,13 +54,16 @@
 	?>
 	</span>
 	</div>
+	<input type="text" id="input-precio-base" value="<?PHP  
+	echo $precio_base[0]['precio'];
+	?>">
 	<!--  fin precio base -->
 	
 	<div class="tipo-de-hotel">
 	<?PHP 
 	$temp = get_post_meta( $post->ID, 'tipo-de-hotel', true );
 		?>
-		<select>
+		<select class="select-precio" name="tipo-de-hotel">
 	<?PHP	
 		foreach( $temp as $v):
 	?>

@@ -78,4 +78,16 @@
 			isRTL: body.is( '.rtl' )
 		} );
 	}
+	
+	
+	$('.select-precio').change(function(e) {
+		
+		incremento=parseFloat($(this).val());
+		base= parseFloat($('#input-precio-base').val());
+		nuevo_precio=incremento+base;
+		$('#input-precio-base').val(nuevo_precio);
+		$('span#precio-base').text(nuevo_precio);
+		
+	});
+	
 } )( jQuery );
