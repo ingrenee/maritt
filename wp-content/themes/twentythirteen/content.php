@@ -28,6 +28,7 @@
 			<?php twentythirteen_entry_meta(); ?>
 			<?php edit_post_link( __( 'Edit', 'twentythirteen' ), '<span class="edit-link">', '</span>' ); ?>
 		</div><!-- .entry-meta -->
+		
 	</header><!-- .entry-header -->
 
 	<?php if ( is_search() ) : // Only display Excerpts for Search ?>
@@ -38,7 +39,61 @@
 	<div class="entry-content">
 		<?php the_content( __( 'Continue reading <span class="meta-nav">&rarr;</span>', 'twentythirteen' ) ); ?>
 		<?php wp_link_pages( array( 'before' => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'twentythirteen' ) . '</span>', 'after' => '</div>', 'link_before' => '<span>', 'link_after' => '</span>' ) ); ?>
+	
+	
+	<!--   precio  -->
+	
+	<?PHP
+	$precio_base = get_post_meta( $post->ID, 'precio-base', true ); 
+	?>
+	<div class="precio-base">
+	Precio:
+	<span id="precio-base">
+	<?PHP  
+	echo $precio_base[0]['precio'];
+	?>
+	</span>
+	</div>
+	<!--  fin precio base -->
+	
+	<div class="tipo-de-hotel">
+	<?PHP 
+	$temp = get_post_meta( $post->ID, 'tipo-de-hotel', true );
+		?>
+		<select>
+	<?PHP	
+		foreach( $temp as $v):
+	?>
+	<option value="<?PHP echo $v['precio-incremento']; ?>">
+	<?PHP echo $v['hoteles']; ?>
+	</option>
+<?
+endforeach;
+?>
+</select>
+	</div>
+	
+	
+	<!-- fin de itinerario -->
+	<div class="itinerario"><h1>Itinerario</h1>
+<?PHP
+$Itinerario = get_post_meta( $post->ID, 'Itinerario', true ); 
+foreach( $Itinerario as $v):
+	?>
+	<div class="item">
+<h2>	<?PHP echo $v['dia']; ?></h2>
+	
+<p>	<?PHP echo $v['descripcion']; ?> </p>
+</div>
+<?
+endforeach;
+?>
+</div>
+	<!--   fin de itinerario  -->	
 	</div><!-- .entry-content -->
+	
+	
+	
 	<?php endif; ?>
 
 	<footer class="entry-meta">
