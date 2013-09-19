@@ -90,4 +90,7 @@
 		
 	});
 	
+	$(".reservar").colorbox({inline:true,width:'50%', href:"#reservar"});
+	
+	
 } )( jQuery );

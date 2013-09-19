@@ -93,6 +93,43 @@ endforeach;
 ?>
 </div>
 	<!--   fin de itinerario  -->	
+	
+	<a href="#" class="inline consultar"> Consultar</a>
+	<a href="#reservar" class="inline reservar"> Reservar </a>
+	
+	
+	<div id="reservar" style="width:400px; height:auto">
+	
+	<form action="reservar.php" method="post">
+	<input type="hidden" name="post_id" value="<?PHP echo $post->ID?>">
+	<div class="row">
+	nombre <input  name="nombres">
+	</div>
+	<div class="row">
+	apellidos <input name="apellidos">
+	</div>
+	<div class="row">
+	e-mail <input name="email">
+	</div>
+	
+	<div class="row">
+	Origen <input name="pais">
+	</div>
+	
+	<div class="row">
+	Fecha de salida <input name="fecha_salida" id="fecha_salida">
+	</div>
+	
+	
+	
+	
+	<input type="submit" value="reservar">
+	</form>
+	
+	</div>
+	
+	
+	
 	</div><!-- .entry-content -->
 	
 	

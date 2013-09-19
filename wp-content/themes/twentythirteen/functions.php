@@ -532,3 +532,42 @@ function product_display_list(){
 	function product_display_grid(){
 		return true;
 	}
+	
+	function ST4_columns_head($defaults) {  
+    $defaults['servicio'] = 'Servicio';  
+	$defaults['email'] = 'Email/cliente';  
+    return $defaults;  
+}  
+  
+// SHOW THE FEATURED IMAGE  
+function ST4_columns_content($column_name, $post_ID) {  
+    if ($column_name == 'servicio') {  
+        // obtener meta relacionado
+		$servicio_relacionado=get_post_meta(  $post_ID, '_wpcf_belongs_post_id', true );
+        if ($servicio_relacionado) {  
+            echo '<a target="_blank" href="'.get_permalink($servicio_relacionado).'">'.get_the_title($servicio_relacionado).'</a>';
+        } else
+		{
+			echo 'Error';
+			} 
+    } 
+	
+	
+	
+	 if ($column_name == 'email'): 
+        // obtener meta relacionado
+		$dato=get_post_meta(  $post_ID, 'wpcf-email-del-cliente', true );
+        if ($dato) {  
+            echo  $dato;
+        } else
+		{
+			echo 'Error';
+			} 
+    
+		endif; 
+	
+	 
+}  
+	
+	add_filter('manage_posts_columns', 'ST4_columns_head');  
+add_action('manage_posts_custom_column', 'ST4_columns_content', 10, 2);  
