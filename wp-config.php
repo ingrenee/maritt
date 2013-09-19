@@ -1,4 +1,6 @@
 <?php
+define('WP_HOME','http://www3.incredibleamericas.com');
+define('WP_SITEURL','http://www3.incredibleamericas.com');
 /** 
  * Configuración básica de WordPress.
  *
