@@ -576,37 +576,101 @@ add_action('manage_posts_custom_column', 'ST4_columns_content', 10, 2);
 
 /*----------------------------------------*/
 /*1*/
-add_action( 'add_meta_boxes', 'add_events_metaboxes' );
+add_action( 'add_meta_boxes', 'add_reservas_metaboxes' );
 
 /*2*/
 
 //add_meta_box( $id, $title, $callback, $page, $context, $priority, $callback_args ); 
 
-function add_events_metaboxes() {
-//	add_meta_box('wpt_events_date', 'Event Date', 'wpt_events_date', 'events', 'side', 'default');
-	add_meta_box('wpt_events_location', 'Event Location', 'wpt_events_location', 'reserva', 'normal', 'high');
+function add_reservas_metaboxes() {
+	add_meta_box('wpt_data_reserva', 'Informacion de reserva', 'wpt_data_reserva', 'reserva', 'normal', 'default');
+	add_meta_box('wpt_tipo_hotel', 'Tipo de hotel', 'wpt_tipo_hotel', 'reserva', 'normal', 'high');
 }
 
-/*3*/
-function wpt_events_location() {
+function wpt_data_reserva()
+{
 	global $post;
+	
+	$wpcf_nombres_y_apellidos= get_post_meta($post->ID, 'wpcf-nombres-y-apellidos', true);
+	$wpcf_fecha_de_nacimiento= get_post_meta($post->ID, 'wpcf-fecha-de-nacimiento', true);
+	$wpcf_pais= get_post_meta($post->ID, 'wpcf-pais', true);	
+	$wpcf_pais_codigo= get_post_meta($post->ID, 'wpcf-pais-codigo', true);
+	
+	$wpcf_salida= get_post_meta($post->ID, 'wpcf-salida', true);
+	$wpcf_telefono= get_post_meta($post->ID, 'wpcf-telefono', true);
+	$wpcf_numero_de_pasajeros= get_post_meta($post->ID, 'wpcf-numero-de-pasajeros', true);
+	$wpcf_mensaje= get_post_meta($post->ID, 'wpcf-mensaje', true);	
+		
+	?>
+	
+	<div class="row">Nombres del cliente:  <span><?PHP echo $wpcf_nombres_y_apellidos;?></span></div>
+	<div class="row">Fecha de nacimiento:  <span><?PHP echo $wpcf_fecha_de_nacimiento;?></span></div>	
+	<div class="row">Pais:  <span><?PHP echo $wpcf_pais;?></span></div>	
+	<div class="row">Fecha de salida:  <span><?PHP echo $wpcf_salida;?></span></div>
+	<div class="row">Telefono:  <span><?PHP echo $wpcf_telefono;?></span></div>			
+	<div class="row">Número de pasajeros:  <span><?PHP echo $wpcf_numero_de_pasajeros;?></span></div>
+	<div class="row">Mensaje:  <span><?PHP echo $wpcf_mensaje;?></span></div>				
+		
+	<?PHP
+	
+	
+	}
+
+/*3*/
+function wpt_tipo_hotel() {
+	global $post;
+	$servicio_relacionado=get_post_meta(  $post->ID, '_wpcf_belongs_post_id', true );
+	$precio_hotel= get_post_meta($post->ID, 'wpcf-tipo-de-hotel-precio', true);
+	$tipo_hotel= get_post_meta($post->ID, 'wpcf-tipo-de-hotel', true);
 	
 	// Noncename needed to verify where the data originated
 	echo '<input type="hidden" name="eventmeta_noncename" id="eventmeta_noncename" value="' . 
 	wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
+	?>
+	<div class="tipo-de-hotel">
+	<?PHP 
+	/* tipos de hotel del servicio */
+	$temp = get_post_meta($servicio_relacionado, 'tipo-de-hotel', true );
+		?>
+	Tipo de hotel: <select class="select-tipo-hotel" name="wpcf-tipo-de-hotel-precio">
+	<?PHP	foreach( $temp as $v):	?>
+	<option value="<?PHP echo $v['precio-incremento']; ?>" <?php selected( $precio_hotel, $v['precio-incremento'] ); ?>>	<?PHP echo $v['hoteles']; ?>	</option>
+	<?PHP
+    endforeach;
+    ?>
+	</select>
+	<input type="hidden" name="wpcf-tipo-de-hotel" class="input-tipo-hotel" value="<?PHP echo $tipo_hotel;?>">
+	</div>
 	
-	// Get the location data if its already been entered
-	$location = get_post_meta($post->ID, '_location', true);
+	<?PHP
+	$precio_base = get_post_meta( $servicio_relacionado, 'precio-base', true ); 
+	$precio_total=$precio_base[0]['precio']+ $precio_hotel;
+	?>
+	<div class="precio-del-servicio">
+	<div class="row">
+	Precio del tour : <?PHP echo $precio_base[0]['precio']; ?>
+	<input type="hidden" id="precio-base" value=" <?PHP echo $precio_base[0]['precio']; ?>">
+	</div>
+	<div class="row">
+	Precio incremento hotel : <span id="label-precio-hotel"><?PHP echo $precio_hotel; ?></span>
+	</div>
 	
-	// Echo out the field
-	echo '<input type="text" name="_location" value="' . $location  . '" class="widefat" />';
+	<div class="row">
+	Precio total del tour : <span id="label-precio-total"><?PHP echo  $precio_total;?></span>
+	<input type="hidden" name="wpcf-precio" class="input-precio-total" value="<?PHP echo $precio_total;?>">
+	</div>
+	
+	</div>
+	
+	<?PHP
+	
 
 }
 
 /*4*/
 // Save the Metabox Data
 
-function wpt_save_events_meta($post_id, $post) {
+function wpt_save_tipo_hotel_meta($post_id, $post) {
 	
 	// verify this came from the our screen and with proper authorization,
 	// because save_post can be triggered at other times
@@ -621,7 +685,9 @@ function wpt_save_events_meta($post_id, $post) {
 	// OK, we're authenticated: we need to find and save the data
 	// We'll put it into an array to make it easier to loop though.
 	
-	$events_meta['_location'] = $_POST['_location'];
+	$events_meta['wpcf-tipo-de-hotel-precio'] = $_POST['wpcf-tipo-de-hotel-precio'];
+	$events_meta['wpcf-tipo-de-hotel'] = $_POST['wpcf-tipo-de-hotel'];	
+	$events_meta['wpcf-precio'] = $_POST['wpcf-precio'];		
 	
 	// Add values of $events_meta as custom fields
 	
@@ -638,4 +704,12 @@ function wpt_save_events_meta($post_id, $post) {
 
 }
 
-add_action('save_post', 'wpt_save_events_meta', 1, 2); // save the custom fields
+add_action('save_post', 'wpt_save_tipo_hotel_meta', 1, 2); // save the custom fields
+
+
+function remove_plugin_metaboxes(){
+     // Only run if the user is an Author or lower.
+       remove_meta_box( 'datos-de-reserva' , 'reserva' , 'normal' );  // Remove Edit Flow Editorial Metadata
+    
+}
+add_action( 'do_meta_boxes', 'remove_plugin_metaboxes' );
