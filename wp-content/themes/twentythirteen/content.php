@@ -63,17 +63,13 @@
 	<?PHP 
 	$temp = get_post_meta( $post->ID, 'tipo-de-hotel', true );
 		?>
-		<select class="select-precio" name="tipo-de-hotel">
-	<?PHP	
-		foreach( $temp as $v):
-	?>
-	<option value="<?PHP echo $v['precio-incremento']; ?>">
-	<?PHP echo $v['hoteles']; ?>
-	</option>
-<?
-endforeach;
-?>
-</select>
+	<select class="select-precio" name="tipo-de-hotel">
+	<?PHP	foreach( $temp as $v):	?>
+	<option value="<?PHP echo $v['precio-incremento']; ?>">	<?PHP echo $v['hoteles']; ?>	</option>
+	<?PHP
+    endforeach;
+    ?>
+	</select>
 	</div>
 	
 	
@@ -88,7 +84,7 @@ foreach( $Itinerario as $v):
 	
 <p>	<?PHP echo $v['descripcion']; ?> </p>
 </div>
-<?
+<?PHP
 endforeach;
 ?>
 </div>
@@ -101,7 +97,7 @@ endforeach;
 	<div id="reservar" style="width:400px; height:auto">
 	
 	<form action="reservar.php" method="post">
-	<input type="hidden" name="post_id" value="<?PHP echo $post->ID?>">
+	<input type="hidden" name="post_id" value="<?PHP echo $post->ID; ?>">
 	<div class="row">
 	nombre <input  name="nombres">
 	</div>
